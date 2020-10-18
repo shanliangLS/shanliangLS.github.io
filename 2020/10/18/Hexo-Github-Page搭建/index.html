@@ -1,0 +1,51 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Hexo + Github Page搭建 | Hexo</title><script src="https://cdn.bootcss.com/valine/1.4.4/Valine.min.js"></script><link rel="stylesheet" href="/css/arknights.css"><link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/highlight.js/10.1.2/styles/atom-one-dark-reasonable.min.css"><style>@font-face {
+ font-family: BenderLight;
+ src: local('Bender'), url("/font/BenderLight.ttf");
+}
+@font-face {
+ font-family: 'JetBrains Mono';
+ src: local('JetBrains Mono'), url('/font/JetBrainsMono-Regular.woff2') format('woff2');
+}</style><meta name="generator" content="Hexo 5.2.0"></head><body><header><nav><a href="/">Home</a><a href="/archives/">Archives</a></nav></header><main><article><div id="post-bg"><div id="post-title"><div id="post-info"><span>date:<time datetime="2020-10-18T14:12:25.000Z" id="date"> 2020-10-18</time></span><br><span>updated:<time datetime="2020-10-18T14:36:33.081Z" id="updated"> 2020-10-18</time></span></div><h1>Hexo + Github Page搭建</h1><hr></div><div id="post-content"><h2 id="安装-Hexo"><a href="#安装-Hexo" class="headerlink" title="安装 Hexo"></a>安装 Hexo</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">npm install hexo-cli -g<br></code></pre></td></tr></table></figure>
+
+<p>建站</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">hexo init blog<br><span class="hljs-built_in">cd</span> blog<br>npm install<br></code></pre></td></tr></table></figure>
+
+<p>新建完成后，指定文件夹的目录如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs plain">.<br>├── _config.yml # 网站的配置信息，您可以在此配置大部分的参数。 <br>├── package.json<br>├── scaffolds # 模版文件夹<br>├── source  # 资源文件夹，除 _posts 文件，其他以下划线_开头的文件或者文件夹不会被编译打包到public文件夹<br>|   ├── _drafts # 草稿文件<br>|   └── _posts # 文章Markdowm文件 <br>└── themes  # 主题文件夹<br></code></pre></td></tr></table></figure>
+
+<p>运行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">hexo s <span class="hljs-comment"># hexo server</span><br></code></pre></td></tr></table></figure>
+
+<p>打开浏览器访问 <a target="_blank" rel="noopener" href="http://localhost:4000/">http://localhost:4000</a> 预览效果</p>
+<h2 id="Github-配置-SSH-key"><a href="#Github-配置-SSH-key" class="headerlink" title="Github 配置 SSH key"></a>Github 配置 SSH key</h2><p>打开命令行输入 cd ~/.ssh 如果没报错或者提示什么的说明就是以前生成过的，直接使用 cat ~/.ssh/id_rsa.pub 命令查看本机上的 SSH key</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">cat ~/.ssh/id_rsa.pub<br></code></pre></td></tr></table></figure>
+
+<p>如果之前没有创建，先执行以下命令全局配置一下本地账户</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">git config --global user.name <span class="hljs-string">&quot;Github 用户名&quot;</span><br>git config --global user.email <span class="hljs-string">&quot;Github 邮箱地址&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>生成密钥 SSH key</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">ssh-keygen -t rsa -C <span class="hljs-string">&#x27;Github 邮箱地址&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<p>按照提示完成三次回车，即可生成 SSH key，使用 <code>cat ~/.ssh/id_rsa.pub</code> 获取 SSH key</p>
+<p>首次使用还需要确认并添加主机到本机SSH可信列表。若返回 Hi xxx! You’ve successfully authenticated, but GitHub does not provide shell access. 内容，则证明添加成功</p>
+<p>登录 Github 在 Setting 找到 SSH 配置，添加 SSH key</p>
+<h2 id="部署到-Github-Page"><a href="#部署到-Github-Page" class="headerlink" title="部署到 Github Page"></a>部署到 Github Page</h2><p>进入 Github 创建一个新的仓库，仓库名 <code>用户名.github.io</code></p>
+<ul>
+<li>Github 仅能使用一个同名仓库的代码托管一个静态站点</li>
+</ul>
+<p>打开本地项目根目录下的 <code>_config.yml</code> 配置文件配置参数</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-comment"># Deployment</span><br><span class="hljs-comment">## Docs: https://hexo.io/docs/one-command-deployment</span><br><span class="hljs-attr">deploy:</span><br>  <span class="hljs-attr">type:</span> <span class="hljs-string">git</span><br>  <span class="hljs-attr">repo:</span><br>    <span class="hljs-attr">github:</span> <span class="hljs-string">git@github.com:xxx.github.io.git</span><br>  <span class="hljs-attr">branch:</span> <span class="hljs-string">master</span><br></code></pre></td></tr></table></figure>
+
+<p>再安装一个部署插件 <code>hexo-deployer-git</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">npm install hexo-deployer-git --save<br></code></pre></td></tr></table></figure>
+
+<p>最后执行以下命令即可一键部署上传</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">hexo g -d <span class="hljs-comment"># hexo generate deploy</span><br></code></pre></td></tr></table></figure>
+
+<p>稍等一会，在浏览器访问网址 https://你的用户名.github.io 就能看到你的博客啦！！</p>
+<div id="paginator"></div></div><div id="post-footer"><hr><a href="/2020/10/18/hello-world/">Hello World Next →</a><hr></div><div id="bottom-btn"><a id="to-index" href="#post-index" title="index">≡</a><a id="to-top" href="#post-title" title="to top">∧</a></div><details id="reward"><summary>打赏</summary><div id="alipay"><span>支付宝 | Alipay</span><br><img src="/img/Alipay.png"></div><div id="wechat"><span>微信 | WeChat</span><br><img src="/img/WeChat.png"></div></details><div id="Valine"></div><script>new Valine({
+ el: '#Valine'
+ , appId: ''
+ , appKey: ''
+ , placeholder: '此条评论委托企鹅物流发送'
+})</script></div></article><aside><div id="about"><a href="/" id="logo"><img src="https://ak.hypergryph.com/assets/index/images/ak/pc/faction/1.png" alt="Logo"></a><h1 id="Dr"><a href="/"> Dr.Shining</a></h1><section id="total"><a id="total-archives" href="/archives"><span class="total-title">Archives Total:</span><span class="total-number">2</span></a><div id="total-tags"><span class="total-title">Tags:</span><span class="total-number">0</span></div><div id="total-categories"><span class="total-title">Categories:</span><span class="total-number">0</span></div></section></div><div id="aside-block"><h1>INDEX</h1><div id="post-index"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-Hexo"><span class="toc-number">1.</span> <span class="toc-text">安装 Hexo</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Github-%E9%85%8D%E7%BD%AE-SSH-key"><span class="toc-number">2.</span> <span class="toc-text">Github 配置 SSH key</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%83%A8%E7%BD%B2%E5%88%B0-Github-Page"><span class="toc-number">3.</span> <span class="toc-text">部署到 Github Page</span></a></li></ol></div></div><footer><nobr><span class="text-title">©</span><span class="text-content">1970 to 2020</span></nobr><wbr><nobr><span class="text-title">ICP</span><span class="text-content">——备案号——</span></nobr><wbr><wbr><nobr>published with&nbsp;<a target="_blank" rel="noopener" href="http://hexo.io">Hexo&nbsp;</a></nobr><wbr><nobr>Theme&nbsp;<a target="_blank" rel="noopener" href="https://github.com/Yue-plus/hexo-theme-arknights">Arknight&nbsp;</a></nobr><wbr><nobr>by&nbsp;<a target="_blank" rel="noopener" href="https://github.com/Yue-plus">Yue_plus</a></nobr></footer></aside></main><canvas id="canvas-dust"></canvas><script src="/js/arknights.js"></script><script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/10.1.2/highlight.min.js"></script></body></html>
