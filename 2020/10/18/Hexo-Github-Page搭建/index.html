@@ -5,7 +5,7 @@
 @font-face {
  font-family: 'JetBrains Mono';
  src: local('JetBrains Mono'), url('/font/JetBrainsMono-Regular.woff2') format('woff2');
-}</style><meta name="generator" content="Hexo 5.2.0"></head><body><header><nav><a href="/">首页</a><a href="/archives/">归档</a></nav></header><main><article><div id="post-bg"><div id="post-title"><div id="post-info"><span>date:<time datetime="2020-10-18T14:12:25.000Z" id="date"> 2020-10-18</time></span><br><span>updated:<time datetime="2020-10-23T05:55:14.729Z" id="updated"> 2020-10-23</time></span></div><h1>Hexo + Github Page 搭建</h1><hr></div><div id="post-content"><h2 id="安装-Hexo"><a href="#安装-Hexo" class="headerlink" title="安装 Hexo"></a>安装 Hexo</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">npm install hexo-cli -g<br></code></pre></td></tr></table></figure>
+}</style><meta name="generator" content="Hexo 5.2.0"></head><body><header><nav><a href="/">首页</a><a href="/archives/">归档</a></nav></header><main><article><div id="post-bg"><div id="post-title"><div id="post-info"><span>date:<time datetime="2020-10-18T14:12:25.000Z" id="date"> 2020-10-18</time></span><br><span>updated:<time datetime="2020-10-23T06:01:07.845Z" id="updated"> 2020-10-23</time></span></div><h1>Hexo + Github Page 搭建</h1><hr></div><div id="post-content"><h2 id="安装-Hexo"><a href="#安装-Hexo" class="headerlink" title="安装 Hexo"></a>安装 Hexo</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">npm install hexo-cli -g<br></code></pre></td></tr></table></figure>
 
 <p>建站</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">hexo init blog<br><span class="hljs-built_in">cd</span> blog<br>npm install<br></code></pre></td></tr></table></figure>
@@ -14,7 +14,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs plain">.<br>├── _config.yml # 网站的配置信息，您可以在此配置大部分的参数。 <br>├── package.json<br>├── scaffolds # 模版文件夹<br>├── source  # 资源文件夹，除 _posts 文件，其他以下划线_开头的文件或者文件夹不会被编译打包到public文件夹<br>|   ├── _drafts # 草稿文件<br>|   └── _posts # 文章Markdowm文件 <br>└── themes  # 主题文件夹<br></code></pre></td></tr></table></figure>
 
 <p>运行</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">hexo s <span class="hljs-comment"># hexo server</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">hexo server  <span class="hljs-comment"># 简写 hexo s</span><br></code></pre></td></tr></table></figure>
 
 <p>打开浏览器访问 <a target="_blank" rel="noopener" href="http://localhost:4000/">http://localhost:4000</a> 预览效果</p>
 <h2 id="Github-配置-SSH-key"><a href="#Github-配置-SSH-key" class="headerlink" title="Github 配置 SSH key"></a>Github 配置 SSH key</h2><p>打开命令行输入 cd ~/.ssh 如果没报错或者提示什么的说明就是以前生成过的，直接使用 cat ~/.ssh/id_rsa.pub 命令查看本机上的 SSH key</p>
@@ -40,7 +40,7 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">npm install hexo-deployer-git --save<br></code></pre></td></tr></table></figure>
 
 <p>最后执行以下命令即可一键部署上传</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">hexo g -d <span class="hljs-comment"># hexo generate deploy</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">hexo generate deploy  <span class="hljs-comment"># 简写 hexo g -d </span><br></code></pre></td></tr></table></figure>
 
 <p>稍等一会，在浏览器访问网址 https://你的用户名.github.io 就能看到你的博客啦！！</p>
 <div id="paginator"></div></div><div id="post-footer"><hr><a href="/2020/10/23/web/node/node-heap-out-of-memory/">← Prev Node.js 编译时内存溢出</a><span style="color: #fe2"> | </span><a href="/2020/10/18/hello-world/">Hello World Next →</a><hr></div><div id="bottom-btn"><a id="to-index" href="#post-index" title="index">≡</a><a id="to-top" href="#post-title" title="to top">∧</a></div><details id="reward"><summary>打赏</summary><div id="alipay"><span>支付宝 | Alipay</span><br><img src="/img/Alipay.png"></div><div id="wechat"><span>微信 | WeChat</span><br><img src="/img/WeChat.png"></div></details><div id="Valine"></div><script>new Valine({
