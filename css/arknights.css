@@ -52,14 +52,16 @@ time {
   font-family: BenderLight; }
 
 code, pre {
-  font-family: "JetBrains Mono"; }
+  font-family: "JetBrains Mono";
+  margin: 0; }
 
 code {
   background-color: rgba(255, 255, 255, 0.1);
   padding: 0 3px; }
 
 pre {
-  background-color: transparent; }
+  background-color: transparent;
+  margin: 0; }
 
 kbd {
   color: #000;
