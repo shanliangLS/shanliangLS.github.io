@@ -52,8 +52,7 @@ time {
   font-family: BenderLight; }
 
 code, pre {
-  font-family: "JetBrains Mono";
-  margin: 0; }
+  font-family: "JetBrains Mono"; }
 
 code {
   background-color: rgba(255, 255, 255, 0.1);
@@ -124,7 +123,9 @@ table {
   background-color: #fff; }
 
 .highlight {
-  overflow-x: auto; }
+  overflow-x: auto;
+  margin-left: 5px;
+  margin-right: 5px; }
   .highlight table td {
     border: 0; }
   .highlight table code {
@@ -375,7 +376,7 @@ aside {
     margin-top: 0; }
   aside footer {
     color: #898989;
-    padding: 0 3px 30px 3px;
+    padding: 0 3px 3px 3px;
     font-family: BenderLight; }
 
 #logo {
