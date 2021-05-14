@@ -1,0 +1,40 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>离线环境安装 npm 包 | 钐椋的博客</title><script src="https://cdn.bootcss.com/valine/1.4.4/Valine.min.js"></script><link rel="stylesheet" href="/css/arknights.css"><link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/highlight.js/10.1.2/styles/atom-one-dark-reasonable.min.css"><style>@font-face {
+ font-family: BenderLight;
+ src: local('Bender'), url("/font/BenderLight.ttf");
+}
+@font-face {
+ font-family: 'JetBrains Mono';
+ src: local('JetBrains Mono'), url('/font/JetBrainsMono-Regular.woff2') format('woff2');
+}</style><meta name="generator" content="Hexo 5.2.0"></head><body><header><nav><a href="/">首页</a><a href="/archives/">归档</a></nav></header><main><article><div id="post-bg"><div id="post-title"><div id="post-info"><span>date:<time datetime="2020-12-08T14:06:16.000Z" id="date"> 2020-12-08</time></span><br><span>updated:<time datetime="2021-05-14T05:26:01.401Z" id="updated"> 2021-05-14</time></span></div><h1>离线环境安装 npm 包</h1><hr></div><div id="post-content"><p>在使用 node 时，如要用第三方库，可使用 <code>npm install</code> 命令安装。它会自动从网上的 npm 库中下载对应的包文件，比较方便。 有些情况下，或在有些公司中，开发环境无法直接连接外网，只能在离线环境下使用开发。就不能直接使用 npm 包管理工具通过网络下载安装依赖库。</p>
+<p>这里介绍的方法是将依赖库制作成为一个 tar 文件，然后直接使用 <code>npm install xxxx.tgz</code> ，离线安装这个依赖库文件。</p>
+<h2 id="制作-tar-包"><a href="#制作-tar-包" class="headerlink" title="制作 tar 包"></a>制作 tar 包</h2><p>首先在有互联网连接的环境的情况自作依赖库的 tar 包，步骤如下：</p>
+<ol>
+<li><p><strong>安装 npm-pack-all 工具</strong></p>
+<p><code>npm-pack-all</code> 可以将 npm 库文件打包为一个 tar 文件，访问 <a target="_blank" rel="noopener" href="https://www.npmjs.com/package/npm-pack-all">https://www.npmjs.com/package/npm-pack-all</a> 了解更多。</p>
+<p>执行下面命令安装它：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">npm install -g npm-pack-all<br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>下载你要打包的库</strong></p>
+<p>一个 npm 库通常又会依赖其它的 npm 库。为了离线使用，它和它所有的依赖库都需要打包起来。我们现在以 “vuepress-plugin-vssue” 为例介绍在 Windows 操作系统上的打包过程。</p>
+<p>这是一个自动化 web 网站常用的库，通常装在自动化脚本所在的本地目录。这里为了打包，需要全局安装。运行下面的命令全局安装这个库：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">npm install -g @vssue/vuepress-plugin-vssue<br></code></pre></td></tr></table></figure>
+
+<p>使用 -g 参数安装会自动把 vuepress-plugin-vssue 依赖的包放在全局目录下，即 <code>%userprofile%\AppData\Roaming\npm</code>。类似这样:</p>
+<img src="/2020/12/08/%E7%A6%BB%E7%BA%BF%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85-npm-%E5%8C%85/npm-pack-all1.png" class="">
+
+<p>从上图中可以看到，全局安装的特点是，这个包的所有依赖包都安装在了自己的目录下的node_modules子目录里。</p>
+</li>
+<li><p><strong>制作 tgz 文件</strong></p>
+<ul>
+<li>在命令行下，通过 <code>cd %appdata%\npm\node_modules\@vssue\api-gitlab-v4</code> 调整当前目录到 api-gitlab-v4 目录下。</li>
+<li>执行 <code>npm-pack-all</code></li>
+<li>执行完毕后，会在当前目录下生成 <code>.tgz</code> 文件，这里生成的文件为 vssue-vuepress-plugin-vssue-1.4.6.tgz 。根据你实际安装的 npm 包文件版本不同，这个文件有可能不同。</li>
+</ul>
+</li>
+</ol>
+<div id="paginator"></div></div><div id="post-footer"><hr><a href="/2021/01/19/Linux-%E7%AC%94%E8%AE%B0/">← Prev Linux 笔记</a><span style="color: #fe2"> | </span><a href="/2020/12/03/Vue-%E7%BB%84%E4%BB%B6%E5%A4%8D%E7%94%A8/">Vue 组件复用 Next →</a><hr></div><div id="bottom-btn"><a id="to-index" href="#post-index" title="index">≡</a><a id="to-top" href="#post-title" title="to top">∧</a></div><details id="reward"><summary>打赏</summary><div id="alipay"><span>支付宝 | Alipay</span><br><img src="/img/Alipay.png"></div><div id="wechat"><span>微信 | WeChat</span><br><img src="/img/WeChat.png"></div></details><div id="Valine"></div><script>new Valine({
+ el: '#Valine'
+ , appId: ''
+ , appKey: ''
+ , placeholder: '此条评论委托企鹅物流发送'
+})</script></div></article><aside><div id="about"><a href="/" id="logo"><img src="https://ak.hypergryph.com/assets/index/images/ak/pc/faction/1.png" alt="Logo"></a><h1 id="Dr"><a target="_blank" rel="noopener" href="https://github.com/shanliangLS"> Dr.Shining</a></h1><section id="total"><a id="total-archives" href="/archives"><span class="total-title">Archives Total:</span><span class="total-number">14</span></a><div id="total-tags"><span class="total-title">Tags:</span><span class="total-number">14</span></div><div id="total-categories"><span class="total-title">Categories:</span><span class="total-number">5</span></div></section></div><div id="aside-block"><h1>INDEX</h1><div id="post-index"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%B6%E4%BD%9C-tar-%E5%8C%85"><span class="toc-number">1.</span> <span class="toc-text">制作 tar 包</span></a></li></ol></div></div><footer><nobr><span class="text-title">©</span><span class="text-content">github.com/shanliangLS</span></nobr><wbr><wbr><nobr>published with&nbsp;<a target="_blank" rel="noopener" href="http://hexo.io">Hexo&nbsp;</a></nobr><wbr><nobr>Theme&nbsp;<a target="_blank" rel="noopener" href="https://github.com/Yue-plus/hexo-theme-arknights">Arknight&nbsp;</a></nobr></footer></aside></main><canvas id="canvas-dust"></canvas><script src="/js/arknights.js"></script><script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/10.1.2/highlight.min.js"></script></body></html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Python 笔记 | 钐椋的博客</title><script src="https://cdn.bootcss.com/valine/1.4.4/Valine.min.js"></script><link rel="stylesheet" href="/css/arknights.css"><link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/highlight.js/10.1.2/styles/atom-one-dark-reasonable.min.css"><style>@font-face {
+ font-family: BenderLight;
+ src: local('Bender'), url("/font/BenderLight.ttf");
+}
+@font-face {
+ font-family: 'JetBrains Mono';
+ src: local('JetBrains Mono'), url('/font/JetBrainsMono-Regular.woff2') format('woff2');
+}</style><meta name="generator" content="Hexo 5.2.0"></head><body><header><nav><a href="/">首页</a><a href="/archives/">归档</a></nav></header><main><article><div id="post-bg"><div id="post-title"><div id="post-info"><span>date:<time datetime="2021-02-13T02:28:07.000Z" id="date"> 2021-02-13</time></span><br><span>updated:<time datetime="2021-05-14T05:30:44.167Z" id="updated"> 2021-05-14</time></span></div><h1>Python 笔记</h1><hr></div><div id="post-content"><h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><ul>
+<li>各种Python的安装包，主要提供Linux版本的后缀是 <code>.whl</code> 和 <code>.tar.gz</code> ，可以搜索相关的包<br><a target="_blank" rel="noopener" href="https://pypi.org/">https://pypi.org/</a></li>
+<li>各种Python的安装包，主要提供Windows版本的后缀是 <code>.whl</code> ，可以直接查找相关的包<br><a target="_blank" rel="noopener" href="https://www.lfd.uci.edu/~gohlke/pythonlibs/">https://www.lfd.uci.edu/~gohlke/pythonlibs/</a></li>
+</ul>
+<p>离线安装方法</p>
+<p><code>.whl</code> 文件安装如下（以 Numpy 为例）：</p>
+<ul>
+<li><p>linux 版本的安装（默认文件在当前目录下）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">pip install numpy-1.15.0-cp27-cp27mu-manylinux1_x86_64.whl<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>Windows 版本的安装（默认文件在当前目录下）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">pip install numpy‑1.14.5+mkl‑cp27‑cp27m‑win_amd64.whl<br></code></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p><code>.tar.gz</code> 文件安装如下：</p>
+<ol>
+<li><p>文件解压</p>
+<ul>
+<li><p><code>.tar.gz</code> 文件解压</p>
+   <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">tar -xzvf numpy-1.15.0.tar.gz<br></code></pre></td></tr></table></figure>
+</li>
+<li><p><code>.zip</code> 文件解压</p>
+   <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">unzip numpy-1.15.0.zip<br></code></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>进入目录 <code>numpy-1.15.0</code></p>
+   <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> numpy-1.15.0<br></code></pre></td></tr></table></figure>
+
+<p>找到 <code>setup.py</code> 文件，然后安装</p>
+   <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">python setup.py install<br></code></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h3 id="离线安装外部依赖包"><a href="#离线安装外部依赖包" class="headerlink" title="离线安装外部依赖包"></a>离线安装外部依赖包</h3><ol>
+<li><p>本地环境所有依赖</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">pip freeze &gt; requirements.txt<br></code></pre></td></tr></table></figure>
+
+<p>单个依赖下所有依赖</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">pip download &lt;package_name&gt;<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>离线下载安装包</p>
+<p>下载单个离线包</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">pip download -d your_offline_packages &lt;package_name&gt;<br></code></pre></td></tr></table></figure>
+
+<p>批量下载离线包</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">pip download -d your_offline_packages -r requirements.txt<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>离线安装</p>
+<p>安装单个离线包</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">pip install --no-index --find-links=/your_offline_packages/ package_name<br></code></pre></td></tr></table></figure>
+
+<p>批量安装离线包</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">pip install --no-index --find-links=/your_offline_packages/ -r requirements.txt<br></code></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h3 id="已安装仍报错ModuleNotFoundError-No-module-named-‘xxx’"><a href="#已安装仍报错ModuleNotFoundError-No-module-named-‘xxx’" class="headerlink" title="已安装仍报错ModuleNotFoundError: No module named ‘xxx’"></a>已安装仍报错ModuleNotFoundError: No module named ‘xxx’</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ pip -V<br>pip 20.0.2 from D:\Studio\Development\Anaconda\lib\site-packages\pip (python 3.6)<br><br>$ pip3 -V<br>pip 21.0.1 from d:\studio\development\python\python36\lib\site-packages\pip (python 3.6)<br></code></pre></td></tr></table></figure>
+
+<p>可以看到 pip3 对应的是另一个路径里 python3.6 的安装位置</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py<br>$ python get-pip.py<br></code></pre></td></tr></table></figure>
+
+<p>现在一样了</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ pip3 -V<br>pip 21.0.1 from d:\studio\development\anaconda\lib\site-packages\pip (python 3.6)<br><br>$ pip -V<br>pip 21.0.1 from d:\studio\development\anaconda\lib\site-packages\pip (python 3.6)<br></code></pre></td></tr></table></figure>
+
+<p>重新安装包，之后就能正常引入了</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">pip3.6 install xxx<br></code></pre></td></tr></table></figure>
+
+<h3 id="安装-mysql"><a href="#安装-mysql" class="headerlink" title="安装 mysql"></a>安装 mysql</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> mysql.connector<br></code></pre></td></tr></table></figure>
+
+<p>不是 <code>pip3 install mysql</code> ，而是 <code>pip3 install mysql-connector</code></p>
+<h2 id="Selenium-PhantomJS"><a href="#Selenium-PhantomJS" class="headerlink" title="Selenium+PhantomJS"></a>Selenium+PhantomJS</h2><h3 id="安装-selenium"><a href="#安装-selenium" class="headerlink" title="安装 selenium"></a>安装 selenium</h3><p>查看当前selenium版本：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">pip3 show selenium<br></code></pre></td></tr></table></figure>
+
+<p>卸载selenium：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">pip3 uninstall selenium<br></code></pre></td></tr></table></figure>
+
+<p>安装指定版本：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">pip3 install selenium==2.48.0<br></code></pre></td></tr></table></figure>
+
+<h3 id="Exception"><a href="#Exception" class="headerlink" title="Exception"></a>Exception</h3><h4 id="selenium-common-exceptions-TimeoutException"><a href="#selenium-common-exceptions-TimeoutException" class="headerlink" title="selenium.common.exceptions.TimeoutException"></a>selenium.common.exceptions.TimeoutException</h4><p>连接超时</p>
+<h2 id="路径、文件名、后缀"><a href="#路径、文件名、后缀" class="headerlink" title="路径、文件名、后缀"></a>路径、文件名、后缀</h2><h3 id="os-path"><a href="#os-path" class="headerlink" title="os.path"></a>os.path</h3><h4 id="splitext"><a href="#splitext" class="headerlink" title="splitext()"></a>splitext()</h4><p>使用 <code>os.path.splitext(file)[0]</code> 获得文件名</p>
+<p>使用 <code>os.path.splitext(file)[-1]</code> 获得以 <code>.</code> 为开头的文件后缀名</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> os.path<br>filePath = <span class="hljs-string">&#x27;http://www.cmse.gov.cn/xwzx/zhxw/202101/t20210113_47528.html&#x27;</span><br><br><span class="hljs-comment"># 获取前缀（文件名称）</span><br>print(os.path.splitext(filePath)[<span class="hljs-number">0</span>])<br><span class="hljs-comment"># 获取后缀（文件类型）</span><br>print(os.path.splitext(filePath)[<span class="hljs-number">-1</span>])<br>print(os.path.splitext(filePath)[<span class="hljs-number">-1</span>][<span class="hljs-number">1</span>:])<br><br>-------运行结果--------<br>http://www.cmse.gov.cn/xwzx/zhxw/<span class="hljs-number">202101</span>/t20210113_47528<br>.html<br>html<br></code></pre></td></tr></table></figure>
+
+<h4 id="basename"><a href="#basename" class="headerlink" title="basename()"></a>basename()</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> os.path<br>filePath=<span class="hljs-string">&#x27;http://www.cmse.gov.cn/xwzx/zhxw/202101/t20210113_47528.html&#x27;</span><br>    <br>print(os.path.basename(filePath))<br><br>-------运行结果--------<br>t20210113_47528.html<br></code></pre></td></tr></table></figure>
+
+<p>获取文件名不加后缀</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> os.path<br>filePath=<span class="hljs-string">&#x27;http://www.cmse.gov.cn/xwzx/zhxw/202101/t20210113_47528.html&#x27;</span><br><br>print(<span class="hljs-string">&quot;.&quot;</span>.join((os.path.basename(filePath).split(<span class="hljs-string">&#x27;.&#x27;</span>)[<span class="hljs-number">0</span>:<span class="hljs-number">-1</span>])))<br><br>-------运行结果--------<br>t20210113_47528<br></code></pre></td></tr></table></figure>
+
+<h4 id="dirname"><a href="#dirname" class="headerlink" title="dirname()"></a>dirname()</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> os.path<br>filePath=<span class="hljs-string">&#x27;http://www.cmse.gov.cn/xwzx/zhxw/202101/t20210113_47528.html&#x27;</span><br><br>print(os.path.dirname(filePath))<br><br>-------运行结果--------<br>http://www.cmse.gov.cn/xwzx/zhxw/<span class="hljs-number">202101</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="其它"><a href="#其它" class="headerlink" title="其它"></a>其它</h3><h4 id="split"><a href="#split" class="headerlink" title="split()"></a>split()</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs python">filePath=<span class="hljs-string">&#x27;http://www.cmse.gov.cn/xwzx/zhxw/202101/t20210113_47528.html&#x27;</span><br><br>print(filePath.split(’\’)[<span class="hljs-number">-1</span>])<br><br>-------运行结果--------<br>t20210113_47528.html<br></code></pre></td></tr></table></figure>
+<div id="paginator"></div></div><div id="post-footer"><hr><a href="/2021/03/04/%E5%90%8E%E7%AB%AF%E7%AC%94%E8%AE%B0/">← Prev 后端笔记</a><span style="color: #fe2"> | </span><a href="/2021/01/19/Linux-%E7%AC%94%E8%AE%B0/">Linux 笔记 Next →</a><hr></div><div id="bottom-btn"><a id="to-index" href="#post-index" title="index">≡</a><a id="to-top" href="#post-title" title="to top">∧</a></div><details id="reward"><summary>打赏</summary><div id="alipay"><span>支付宝 | Alipay</span><br><img src="/img/Alipay.png"></div><div id="wechat"><span>微信 | WeChat</span><br><img src="/img/WeChat.png"></div></details><div id="Valine"></div><script>new Valine({
+ el: '#Valine'
+ , appId: ''
+ , appKey: ''
+ , placeholder: '此条评论委托企鹅物流发送'
+})</script></div></article><aside><div id="about"><a href="/" id="logo"><img src="https://ak.hypergryph.com/assets/index/images/ak/pc/faction/1.png" alt="Logo"></a><h1 id="Dr"><a target="_blank" rel="noopener" href="https://github.com/shanliangLS"> Dr.Shining</a></h1><section id="total"><a id="total-archives" href="/archives"><span class="total-title">Archives Total:</span><span class="total-number">14</span></a><div id="total-tags"><span class="total-title">Tags:</span><span class="total-number">14</span></div><div id="total-categories"><span class="total-title">Categories:</span><span class="total-number">5</span></div></section></div><div id="aside-block"><h1>INDEX</h1><div id="post-index"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85"><span class="toc-number">1.</span> <span class="toc-text">安装</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A6%BB%E7%BA%BF%E5%AE%89%E8%A3%85%E5%A4%96%E9%83%A8%E4%BE%9D%E8%B5%96%E5%8C%85"><span class="toc-number">1.1.</span> <span class="toc-text">离线安装外部依赖包</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B7%B2%E5%AE%89%E8%A3%85%E4%BB%8D%E6%8A%A5%E9%94%99ModuleNotFoundError-No-module-named-%E2%80%98xxx%E2%80%99"><span class="toc-number">1.2.</span> <span class="toc-text">已安装仍报错ModuleNotFoundError: No module named ‘xxx’</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-mysql"><span class="toc-number">1.3.</span> <span class="toc-text">安装 mysql</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Selenium-PhantomJS"><span class="toc-number">2.</span> <span class="toc-text">Selenium+PhantomJS</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-selenium"><span class="toc-number">2.1.</span> <span class="toc-text">安装 selenium</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Exception"><span class="toc-number">2.2.</span> <span class="toc-text">Exception</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#selenium-common-exceptions-TimeoutException"><span class="toc-number">2.2.1.</span> <span class="toc-text">selenium.common.exceptions.TimeoutException</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B7%AF%E5%BE%84%E3%80%81%E6%96%87%E4%BB%B6%E5%90%8D%E3%80%81%E5%90%8E%E7%BC%80"><span class="toc-number">3.</span> <span class="toc-text">路径、文件名、后缀</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#os-path"><span class="toc-number">3.1.</span> <span class="toc-text">os.path</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#splitext"><span class="toc-number">3.1.1.</span> <span class="toc-text">splitext()</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#basename"><span class="toc-number">3.1.2.</span> <span class="toc-text">basename()</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#dirname"><span class="toc-number">3.1.3.</span> <span class="toc-text">dirname()</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B6%E5%AE%83"><span class="toc-number">3.2.</span> <span class="toc-text">其它</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#split"><span class="toc-number">3.2.1.</span> <span class="toc-text">split()</span></a></li></ol></li></ol></li></ol></div></div><footer><nobr><span class="text-title">©</span><span class="text-content">github.com/shanliangLS</span></nobr><wbr><wbr><nobr>published with&nbsp;<a target="_blank" rel="noopener" href="http://hexo.io">Hexo&nbsp;</a></nobr><wbr><nobr>Theme&nbsp;<a target="_blank" rel="noopener" href="https://github.com/Yue-plus/hexo-theme-arknights">Arknight&nbsp;</a></nobr></footer></aside></main><canvas id="canvas-dust"></canvas><script src="/js/arknights.js"></script><script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/10.1.2/highlight.min.js"></script></body></html>

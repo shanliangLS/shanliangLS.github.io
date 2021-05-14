@@ -1,0 +1,103 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Linux 笔记 | 钐椋的博客</title><script src="https://cdn.bootcss.com/valine/1.4.4/Valine.min.js"></script><link rel="stylesheet" href="/css/arknights.css"><link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/highlight.js/10.1.2/styles/atom-one-dark-reasonable.min.css"><style>@font-face {
+ font-family: BenderLight;
+ src: local('Bender'), url("/font/BenderLight.ttf");
+}
+@font-face {
+ font-family: 'JetBrains Mono';
+ src: local('JetBrains Mono'), url('/font/JetBrainsMono-Regular.woff2') format('woff2');
+}</style><meta name="generator" content="Hexo 5.2.0"></head><body><header><nav><a href="/">首页</a><a href="/archives/">归档</a></nav></header><main><article><div id="post-bg"><div id="post-title"><div id="post-info"><span>date:<time datetime="2021-01-19T08:48:21.000Z" id="date"> 2021-01-19</time></span><br><span>updated:<time datetime="2021-05-14T05:34:57.947Z" id="updated"> 2021-05-14</time></span></div><h1>Linux 笔记</h1><hr></div><div id="post-content"><h2 id="安装-jdk"><a href="#安装-jdk" class="headerlink" title="安装 jdk"></a>安装 jdk</h2><p>查询 yum 下所有的 java 版本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">yum list java*<br></code></pre></td></tr></table></figure>
+
+<p>安装 openjdk1.8</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">yum install java-1.8.0-openjdk.x86_64<br></code></pre></td></tr></table></figure>
+
+<p>配置 java 环境</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">vim etc/profile<br></code></pre></td></tr></table></figure>
+
+<p>在最底下添加</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">#set java environment</span><br>JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.191.b12-1.el7_6.x86_64<br>JRE_HOME=<span class="hljs-variable">$JAVA_HOME</span>/jre<br>CLASS_PATH=.:<span class="hljs-variable">$JAVA_HOME</span>/lib/dt.jar:<span class="hljs-variable">$JAVA_HOME</span>/lib/tools.jar:<span class="hljs-variable">$JRE_HOME</span>/lib<br>PATH=<span class="hljs-variable">$PATH</span>:<span class="hljs-variable">$JAVA_HOME</span>/bin:<span class="hljs-variable">$JRE_HOME</span>/bin<br><span class="hljs-built_in">export</span> JAVA_HOME JRE_HOME CLASS_PATH PATH<br></code></pre></td></tr></table></figure>
+
+<p>检测是否安装成功</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">java -version<br></code></pre></td></tr></table></figure>
+
+<h2 id="安装-redis"><a href="#安装-redis" class="headerlink" title="安装 redis"></a>安装 redis</h2><h3 id="编译安装"><a href="#编译安装" class="headerlink" title="编译安装"></a>编译安装</h3><p>进入官网找到下载地址 <a target="_blank" rel="noopener" href="https://redis.io/download">https://redis.io/download</a></p>
+<p>解压</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">tar -zvxf redis-5.0.7.tar.gz<br></code></pre></td></tr></table></figure>
+
+<p>一般将 redis 目录放置到 <code>/usr/local/redis</code> 目录</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">mv ./redis-5.0.7 /usr/<span class="hljs-built_in">local</span>/redis<br></code></pre></td></tr></table></figure>
+
+<p>cd 到 <code>/usr/local/redis</code> 目录，输入命令 <code>make</code> 执行编译命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">make<br></code></pre></td></tr></table></figure>
+
+<p>安装</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">make PREFIX=/usr/<span class="hljs-built_in">local</span>/redis install<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>这里多了一个关键字 <code>PREFIX=</code> 这个关键字的作用是编译的时候用于指定程序存放的路径。比如我们现在就是指定了 redis 必须存放在 <code>/usr/local/redis</code> 目录。假设不添加该关键字 Linux 会将可执行文件存放在 <code>/usr/local/bin</code> 目录，库文件会存放在 <code>/usr/local/lib</code> 目录。配置文件会存放在 <code>/usr/local/etc</code> 目录。其他的资源文件会存放在 <code>usr/local/share</code> 目录。这里指定号目录也方便后续的卸载，后续直接 <code>rm -rf /usr/local/redis</code> 即可删除 redis</p>
+</blockquote>
+<h3 id="rpm安装"><a href="#rpm安装" class="headerlink" title="rpm安装"></a>rpm安装</h3><p>访问 <a target="_blank" rel="noopener" href="http://pkgs.org/download/redis">http://pkgs.org/download/redis</a> 根据 linux 平台以及版本下载对应的 rpm 包</p>
+<p>安装</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">rpm -ivh redis-3.0.7-4.el7.art.x86_64.rpm<br></code></pre></td></tr></table></figure>
+
+<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><p>配置 redis 为后台启动</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">vi /usr/<span class="hljs-built_in">local</span>/redis/redis.conf<br></code></pre></td></tr></table></figure>
+
+<p>将 <code>daemonize no</code> 改成 <code>daemonize yes</code></p>
+<p>将 redis 加入到开机启动</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">vi /etc/rc.local<br></code></pre></td></tr></table></figure>
+
+<p>在里面添加内容：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">/usr/<span class="hljs-built_in">local</span>/redis/bin/redis-server /usr/<span class="hljs-built_in">local</span>/redis/redis.conf<br></code></pre></td></tr></table></figure>
+
+<p>在目录 <code>/usr/local/redis</code> 启动 redis</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">./bin/redis-server ./redis.conf<br></code></pre></td></tr></table></figure>
+
+<h2 id="安装-tomcat"><a href="#安装-tomcat" class="headerlink" title="安装 tomcat"></a>安装 tomcat</h2><p>下载 <a target="_blank" rel="noopener" href="https://tomcat.apache.org/download-80.cgi">Apache tomcat</a></p>
+<p>解压</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">tar -zxvf apache-tomcat-8.5.37.tar.gz  <br></code></pre></td></tr></table></figure>
+
+<p>移动到 <code>/usr/local/tomcat</code></p>
+<p>运行  <code>/usr/local/tomcat/bin/startup.sh</code>  启动 tomcat，默认端口8080</p>
+<p>运行<code> /usr/local/tomcat/bin/shutdown.sh</code> 关闭 tomcat</p>
+<h3 id="配置-1"><a href="#配置-1" class="headerlink" title="配置"></a>配置</h3><p>进入 <code>/usr/local/tomcat/conf</code> 目录修改 <code>server.xml</code> 中的 tomcat 端口，用 <code>/8080</code> 定位到8080端口</p>
+<p>启动失败解决办法</p>
+<p>如果不能访问，说明没有开启8080端口</p>
+<p>先查看防火墙开放端口列表 <code>firewall-cmd --zone=public --list-ports</code></p>
+<p>如果没有8080端口，添加端口</p>
+<ul>
+<li>如果是 firewalld 防火墙 ，开启防火墙端口 <code>firewall-cmd --zone=public --add-port=8080/tcp --permanent</code> 并且重新加载防火墙 <code>firewall-cmd --reload</code></li>
+<li>如果是 iptables 防火墙 ，执行 <code>vi /etc/sysconfig/iptables</code> 加入下面内容 <code>-A INPUT -m state --state NEW -m tcp -p tcp --dport 8080 -j ACCEPT</code></li>
+</ul>
+<h2 id="安装-mysql"><a href="#安装-mysql" class="headerlink" title="安装 mysql"></a>安装 mysql</h2><p>博客参考 <a target="_blank" rel="noopener" href="https://www.cnblogs.com/wendy-0901/p/12673705.html">https://www.cnblogs.com/wendy-0901/p/12673705.html</a></p>
+<h3 id="yum-安装"><a href="#yum-安装" class="headerlink" title="yum 安装"></a>yum 安装</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">yum install mysql<br></code></pre></td></tr></table></figure>
+
+<p>启动</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">service mysqld start<br></code></pre></td></tr></table></figure>
+
+<p>第一次进入 mysql 不需要密码</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">mysql -u root -p<br></code></pre></td></tr></table></figure>
+
+<p>选择数据库</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">mysql&gt;use mysql;<br></code></pre></td></tr></table></figure>
+
+<p>修改密码</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">mysql&gt;UPDATE user SET password=PASSWORD(<span class="hljs-string">&#x27;123456&#x27;</span>) WHERE user=<span class="hljs-string">&#x27;root&#x27;</span>;<br></code></pre></td></tr></table></figure>
+
+<p>刷新</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">mysql&gt;flush privileges<br></code></pre></td></tr></table></figure>
+
+<h3 id="用命令执行-sql-文件"><a href="#用命令执行-sql-文件" class="headerlink" title="用命令执行 sql 文件"></a>用命令执行 sql 文件</h3><p>新建数据库</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">mysql&gt;create database 新建数据库;<br></code></pre></td></tr></table></figure>
+
+<p>进入该数据库</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">mysql&gt;use 新建数据库<br></code></pre></td></tr></table></figure>
+
+<p>导入文件，使用绝对路径</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">mysql&gt;<span class="hljs-built_in">source</span> sql文件<br></code></pre></td></tr></table></figure>
+<div id="paginator"></div></div><div id="post-footer"><hr><a href="/2021/02/13/Python-%E7%AC%94%E8%AE%B0/">← Prev Python 笔记</a><span style="color: #fe2"> | </span><a href="/2020/12/08/%E7%A6%BB%E7%BA%BF%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85-npm-%E5%8C%85/">离线环境安装 npm 包 Next →</a><hr></div><div id="bottom-btn"><a id="to-index" href="#post-index" title="index">≡</a><a id="to-top" href="#post-title" title="to top">∧</a></div><details id="reward"><summary>打赏</summary><div id="alipay"><span>支付宝 | Alipay</span><br><img src="/img/Alipay.png"></div><div id="wechat"><span>微信 | WeChat</span><br><img src="/img/WeChat.png"></div></details><div id="Valine"></div><script>new Valine({
+ el: '#Valine'
+ , appId: ''
+ , appKey: ''
+ , placeholder: '此条评论委托企鹅物流发送'
+})</script></div></article><aside><div id="about"><a href="/" id="logo"><img src="https://ak.hypergryph.com/assets/index/images/ak/pc/faction/1.png" alt="Logo"></a><h1 id="Dr"><a target="_blank" rel="noopener" href="https://github.com/shanliangLS"> Dr.Shining</a></h1><section id="total"><a id="total-archives" href="/archives"><span class="total-title">Archives Total:</span><span class="total-number">14</span></a><div id="total-tags"><span class="total-title">Tags:</span><span class="total-number">14</span></div><div id="total-categories"><span class="total-title">Categories:</span><span class="total-number">5</span></div></section></div><div id="aside-block"><h1>INDEX</h1><div id="post-index"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-jdk"><span class="toc-number">1.</span> <span class="toc-text">安装 jdk</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-redis"><span class="toc-number">2.</span> <span class="toc-text">安装 redis</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85"><span class="toc-number">2.1.</span> <span class="toc-text">编译安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#rpm%E5%AE%89%E8%A3%85"><span class="toc-number">2.2.</span> <span class="toc-text">rpm安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE"><span class="toc-number">2.3.</span> <span class="toc-text">配置</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-tomcat"><span class="toc-number">3.</span> <span class="toc-text">安装 tomcat</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE-1"><span class="toc-number">3.1.</span> <span class="toc-text">配置</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-mysql"><span class="toc-number">4.</span> <span class="toc-text">安装 mysql</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#yum-%E5%AE%89%E8%A3%85"><span class="toc-number">4.1.</span> <span class="toc-text">yum 安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C-sql-%E6%96%87%E4%BB%B6"><span class="toc-number">4.2.</span> <span class="toc-text">用命令执行 sql 文件</span></a></li></ol></li></ol></div></div><footer><nobr><span class="text-title">©</span><span class="text-content">github.com/shanliangLS</span></nobr><wbr><wbr><nobr>published with&nbsp;<a target="_blank" rel="noopener" href="http://hexo.io">Hexo&nbsp;</a></nobr><wbr><nobr>Theme&nbsp;<a target="_blank" rel="noopener" href="https://github.com/Yue-plus/hexo-theme-arknights">Arknight&nbsp;</a></nobr></footer></aside></main><canvas id="canvas-dust"></canvas><script src="/js/arknights.js"></script><script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/10.1.2/highlight.min.js"></script></body></html>
