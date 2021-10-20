@@ -1,0 +1,36 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>工具技巧 | 钐椋的博客</title><script src="https://cdn.bootcss.com/valine/1.4.4/Valine.min.js"></script><link rel="stylesheet" href="/css/arknights.css"><link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/highlight.js/10.1.2/styles/atom-one-dark-reasonable.min.css"><style>@font-face {
+ font-family: BenderLight;
+ src: local('Bender'), url("/font/BenderLight.ttf");
+}
+@font-face {
+ font-family: 'JetBrains Mono';
+ src: local('JetBrains Mono'), url('/font/JetBrainsMono-Regular.woff2') format('woff2');
+}</style><meta name="generator" content="Hexo 5.2.0"></head><body><header><nav><a href="/">首页</a><a href="/archives/">归档</a></nav></header><main><article><div id="post-bg"><div id="post-title"><div id="post-info"><span>date:<time datetime="2021-10-12T09:15:53.340Z" id="date"> 2021-10-12</time></span><br><span>updated:<time datetime="2021-10-20T02:58:11.109Z" id="updated"> 2021-10-20</time></span></div><h1>工具技巧</h1><hr></div><div id="post-content"><h2 id="注册表"><a href="#注册表" class="headerlink" title="注册表"></a>注册表</h2><h3 id="鼠标右键"><a href="#鼠标右键" class="headerlink" title="鼠标右键"></a>鼠标右键</h3><ul>
+<li><p>所有或大部分文件都有的右键菜单</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">HKEY_CLASSES_ROOT\*\Shellex\ContextMenuHandlers<br></code></pre></td></tr></table></figure>
+
+<p>打开注册表编辑器后，在[HKEY_CLASSES_ROOT*\Shellex\ContextMenuHandlers]，根据名称删除相应的子项。</p>
+</li>
+<li><p>文件夹的右键菜单</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs plain">HKEY_CLASSES_ROOT\Directory\Shell<br>HKEY_CLASSES_ROOT\Directory\Shellex\ContextMenuHandlers<br></code></pre></td></tr></table></figure>
+
+<p>在注册表中的[HKEY_CLASSES_ROOT\Directory\Shell和HKEY_CLASSES_ROOT\Directory\Shellex\ContextMenuHandlers]下，寻找对应的名称并删除。如果在这里找不到，可以在HKEY_CLASSES_ROOT\Folder\shell和HKEY_CLASSES_ROOT\Folder\shellex\ContextMenuHandlers分支里找到。</p>
+</li>
+<li><p>右键的“新建”菜单</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">HKEY_CLASSES_ROOT\*.doc<br></code></pre></td></tr></table></figure>
+
+<p>注册表中的HKEY_COASSES_ROOT根键下存放着所有文件类型的信息，如[HKEY_CLASSES_ROOT*.doc]就是Word文档的相关信息，在右键菜单的“新建”菜单中发现了“新建Word文档”的选项，那么在这个键值下删除“Shellnew”后，右键的“新建”菜单中就没有了“新建Word文档”的选项，其它类型的文件我们也可以这样操作。</p>
+</li>
+<li><p>打开方式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs plain">HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\fileExts<br>HKEY_CLASSES_ROOT\SystemFileAssociations<br></code></pre></td></tr></table></figure>
+
+<p>一种类型的文件会有很多种打开方式，如右击一个txt文件，在打开方式菜单下可能会有“记事本”、“写字板”等在删除它们可以在[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\fileExts]和[HKEY_CLASSES_ROOT\SystemFileAssociations]下找到相应的扩展名子项，然后在“OpenWithList”子项中删除不需要的键值即可。</p>
+</li>
+</ul>
+<h4 id="鼠标右键管理工具"><a href="#鼠标右键管理工具" class="headerlink" title="鼠标右键管理工具"></a>鼠标右键管理工具</h4><p><a target="_blank" rel="noopener" href="https://github.com/BluePointLilac/ContextMenuManager">ContextMenuManager（开源）</a></p>
+<div id="paginator"></div></div><div id="post-footer"><hr><a href="/2021/06/10/Java-%E7%AC%94%E8%AE%B0/">Java 笔记 Next →</a><hr></div><div id="bottom-btn"><a id="to-index" href="#post-index" title="index">≡</a><a id="to-top" href="#post-title" title="to top">∧</a></div><details id="reward"><summary>打赏</summary><div id="alipay"><span>支付宝 | Alipay</span><br><img src="/img/Alipay.png"></div><div id="wechat"><span>微信 | WeChat</span><br><img src="/img/WeChat.png"></div></details><div id="Valine"></div><script>new Valine({
+ el: '#Valine'
+ , appId: ''
+ , appKey: ''
+ , placeholder: '此条评论委托企鹅物流发送'
+})</script></div></article><aside><div id="about"><a href="/" id="logo"><img src="https://ak.hypergryph.com/assets/index/images/ak/pc/faction/1.png" alt="Logo"></a><h1 id="Dr"><a target="_blank" rel="noopener" href="https://github.com/shanliangLS"> Dr.Shining</a></h1><section id="total"><a id="total-archives" href="/archives"><span class="total-title">Archives Total:</span><span class="total-number">17</span></a><div id="total-tags"><span class="total-title">Tags:</span><span class="total-number">16</span></div><div id="total-categories"><span class="total-title">Categories:</span><span class="total-number">6</span></div></section></div><div id="aside-block"><h1>INDEX</h1><div id="post-index"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B3%A8%E5%86%8C%E8%A1%A8"><span class="toc-number">1.</span> <span class="toc-text">注册表</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%BC%A0%E6%A0%87%E5%8F%B3%E9%94%AE"><span class="toc-number">1.1.</span> <span class="toc-text">鼠标右键</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%BC%A0%E6%A0%87%E5%8F%B3%E9%94%AE%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7"><span class="toc-number">1.1.1.</span> <span class="toc-text">鼠标右键管理工具</span></a></li></ol></li></ol></li></ol></div></div><footer><nobr><span class="text-title">©</span><span class="text-content">github.com/shanliangLS</span></nobr><wbr><wbr><nobr>published with&nbsp;<a target="_blank" rel="noopener" href="http://hexo.io">Hexo&nbsp;</a></nobr><wbr><nobr>Theme&nbsp;<a target="_blank" rel="noopener" href="https://github.com/Yue-plus/hexo-theme-arknights">Arknight&nbsp;</a></nobr></footer></aside></main><canvas id="canvas-dust"></canvas><script src="/js/arknights.js"></script><script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/10.1.2/highlight.min.js"></script></body></html>
