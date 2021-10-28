@@ -1,0 +1,142 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Hubot + RocketChat 搭建 | 钐椋的博客</title><script src="https://cdn.bootcss.com/valine/1.4.4/Valine.min.js"></script><link rel="stylesheet" href="/css/arknights.css"><link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/highlight.js/10.1.2/styles/atom-one-dark-reasonable.min.css"><style>@font-face {
+ font-family: BenderLight;
+ src: local('Bender'), url("/font/BenderLight.ttf");
+}
+@font-face {
+ font-family: 'JetBrains Mono';
+ src: local('JetBrains Mono'), url('/font/JetBrainsMono-Regular.woff2') format('woff2');
+}</style><meta name="generator" content="Hexo 5.2.0"></head><body><header><nav><a href="/">首页</a><a href="/archives/">归档</a></nav></header><main><article><div id="post-bg"><div id="post-title"><div id="post-info"><span>date:<time datetime="2021-10-28T07:41:45.000Z" id="date"> 2021-10-28</time></span><br><span>updated:<time datetime="2021-10-28T09:08:11.727Z" id="updated"> 2021-10-28</time></span></div><h1>Hubot + RocketChat 搭建</h1><hr></div><div id="post-content"><h2 id="安装-MongoDB"><a href="#安装-MongoDB" class="headerlink" title="安装 MongoDB"></a>安装 MongoDB</h2><p>参考 <a target="_blank" rel="noopener" href="https://www.runoob.com/mongodb/mongodb-linux-install.html">Linux平台安装MongoDB</a></p>
+<p>这里我们选择 tgz 下载，下载完安装包，并解压 <strong>tgz</strong>（以下演示的是 64 位 Linux上的安装） 。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">wget https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-ubuntu1604-4.2.8.tgz    <span class="hljs-comment"># 下载</span><br>tar -zxvf mongodb-linux-x86_64-ubuntu1604-4.2.8.tgz                                    <span class="hljs-comment"># 解压</span><br><br>mv mongodb-src-r4.2.8  /usr/<span class="hljs-built_in">local</span>/mongodb4                          <span class="hljs-comment"># 将解压包拷贝到指定目录</span><br></code></pre></td></tr></table></figure>
+
+<p>MongoDB 的可执行文件位于 bin 目录下，所以可以将其添加到 <strong>PATH</strong> 路径中：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">export</span> PATH=&lt;mongodb-install-directory&gt;/bin:<span class="hljs-variable">$PATH</span><br></code></pre></td></tr></table></figure>
+
+<p><strong><mongodb-install-directory></strong> 为你 MongoDB 的安装路径。如本文的 <strong>/usr/local/mongodb4</strong> 。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">export</span> PATH=/usr/<span class="hljs-built_in">local</span>/mongodb4/bin:<span class="hljs-variable">$PATH</span><br></code></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="创建数据库目录"><a href="#创建数据库目录" class="headerlink" title="创建数据库目录"></a>创建数据库目录</h3><p>默认情况下 MongoDB 启动后会初始化以下两个目录：</p>
+<ul>
+<li>数据存储目录：/var/lib/mongodb</li>
+<li>日志文件目录：/var/log/mongodb</li>
+</ul>
+<p>我们在启动前可以先创建这两个目录并设置当前用户有读写权限：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo mkdir -p /var/lib/mongo<br>sudo mkdir -p /var/<span class="hljs-built_in">log</span>/mongodb<br>sudo chown `whoami` /var/lib/mongo     <span class="hljs-comment"># 设置权限</span><br>sudo chown `whoami` /var/<span class="hljs-built_in">log</span>/mongodb   <span class="hljs-comment"># 设置权限</span><br></code></pre></td></tr></table></figure>
+
+<p>接下来启动 Mongodb 服务：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">mongod --dbpath /var/lib/mongo --logpath /var/<span class="hljs-built_in">log</span>/mongodb/mongod.log --fork<br></code></pre></td></tr></table></figure>
+
+<p>打开 /var/log/mongodb/mongod.log 文件看到以下信息，说明启动成功。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># tail -10f /var/log/mongodb/mongod.log</span><br>2020-07-09T12:20:17.391+0800 I  NETWORK  [listener] Listening on /tmp/mongodb-27017.sock<br>2020-07-09T12:20:17.392+0800 I  NETWORK  [listener] Listening on 127.0.0.1<br>2020-07-09T12:20:17.392+0800 I  NETWORK  [listener] waiting <span class="hljs-keyword">for</span> connections on port 27017<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="MongoDB-后台管理-Shell"><a href="#MongoDB-后台管理-Shell" class="headerlink" title="MongoDB 后台管理 Shell"></a>MongoDB 后台管理 Shell</h3><p>如果你需要进入 mongodb 后台管理，你需要先打开 mongodb 装目录的下的 bin 目录，然后执行 mongo 命令文件。</p>
+<p>MongoDB Shell 是 MongoDB 自带的交互式 Javascript shell，用来对 MongoDB 进行操作和管理的交互式环境。</p>
+<p>当你进入 mongoDB 后台后，它默认会链接到 test 文档（数据库）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ <span class="hljs-built_in">cd</span> /usr/<span class="hljs-built_in">local</span>/mongodb4/bin<br>$ ./mongo<br>MongoDB shell version v4.2.8<br>connecting to: mongodb://127.0.0.1:27017/?compressors=disabled&amp;gssapiServiceName=mongodb<br>Implicit session: session &#123; <span class="hljs-string">&quot;id&quot;</span> : UUID(<span class="hljs-string">&quot;2cfdafc4-dd56-4cfc-933a-187b887119b3&quot;</span>) &#125;<br>MongoDB server version: 4.2.8<br>Welcome to the MongoDB shell.<br>……<br></code></pre></td></tr></table></figure>
+
+<p>由于它是一个JavaScript shell，您可以运行一些简单的算术运算:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">&gt; 2+2<br>4<br>&gt; 3+6<br>9<br></code></pre></td></tr></table></figure>
+
+<p>现在让我们插入一些简单的数据，并对插入的数据进行检索：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash">&gt; db.runoob.insert(&#123;x:10&#125;)<br>WriteResult(&#123; <span class="hljs-string">&quot;nInserted&quot;</span> : 1 &#125;)<br>&gt; db.runoob.find()<br>&#123; <span class="hljs-string">&quot;_id&quot;</span> : ObjectId(<span class="hljs-string">&quot;5f069bdb4e02f8baf90f1184&quot;</span>), <span class="hljs-string">&quot;x&quot;</span> : 10 &#125;<br>&gt; <br></code></pre></td></tr></table></figure>
+
+<p>第一个命令将数字 10 插入到 runoob 集合的 x 字段中。</p>
+<p>如果要停止 mongodb 可以使用以下命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">mongod --dbpath /var/lib/mongo --logpath /var/<span class="hljs-built_in">log</span>/mongodb/mongod.log --shutdown<br></code></pre></td></tr></table></figure>
+
+<p>也可以在 mongo 的命令出口中实现：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">&gt; use admin<br>switched to db admin<br>&gt; db.shutdownServer()<br></code></pre></td></tr></table></figure>
+
+<p>更多安装方法可以参考官网：<a target="_blank" rel="noopener" href="https://docs.mongodb.com/manual/administration/install-on-linux/">https://docs.mongodb.com/manual/administration/install-on-linux/</a></p>
+<h3 id="配置-mongod-conf"><a href="#配置-mongod-conf" class="headerlink" title="配置 mongod.conf"></a>配置 mongod.conf</h3><p>在 <code>/etc</code> 下创建文件 <code>mongod.conf</code> ：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs plain"># 数据库文件位置<br>dbpath&#x3D;&#x2F;var&#x2F;lib&#x2F;mongo<br><br>#日志文件的路径<br>logpath&#x3D;&#x2F;var&#x2F;log&#x2F;mongodb&#x2F;mongod.log<br><br>#PID File 的完整路径<br>pidfilepath&#x3D;&#x2F;var&#x2F;log&#x2F;mongodb&#x2F;master.pid<br><br>#设置每个数据库将被保存在一个单独的目录<br>#directoryperdb&#x3D;true<br><br>#以追加的方式记录日志<br>#logappend&#x3D;true<br><br>#IP和端口<br>bind_ip&#x3D;127.0.0.1<br>port&#x3D;27017<br><br>#以守护进程的方式运行，创建服务器进程<br>fork&#x3D;true<br><br>#副本集名称，同一个副本集，名称必须一致<br>replSet&#x3D;replSet<br></code></pre></td></tr></table></figure>
+
+<p>以 <code>mongod.conf</code> 启动</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">mongod --config /etc/mongod.conf --fork<br></code></pre></td></tr></table></figure>
+
+<p>停止</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">mongod --config /etc/mongod.conf --shutdown<br></code></pre></td></tr></table></figure>
+
+<h2 id="安装-RocketChat"><a href="#安装-RocketChat" class="headerlink" title="安装 RocketChat"></a>安装 RocketChat</h2><p>官网 <a target="_blank" rel="noopener" href="https://docs.rocket.chat/quick-start/installing-and-updating/manual-installation/centos">Rocket.Chat in CentOS</a></p>
+<p>参考 <a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_38041439/article/details/104391064">使用centos7安装rocket.chat</a></p>
+<ol>
+<li><p><code>Install necessary dependency packages</code> – 安装必须依赖的包</p>
+<p><code>Update package list and configure yum to install the official MongoDB packages with the following yum repository file</code> – 更新你的 yum 包，并且安装 MongoDB</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo yum -y check-update<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash">cat &lt;&lt; <span class="hljs-string">EOF | sudo tee -a /etc/yum.repos.d/mongodb-org-4.0.repo</span><br><span class="hljs-string">[mongodb-org-4.0]</span><br><span class="hljs-string">name=MongoDB Repository</span><br><span class="hljs-string">baseurl=https://repo.mongodb.org/yum/redhat/7/mongodb-org/4.0/x86_64/</span><br><span class="hljs-string">gpgcheck=1</span><br><span class="hljs-string">enabled=1</span><br><span class="hljs-string">gpgkey=https://www.mongodb.org/static/pgp/server-4.0.asc</span><br><span class="hljs-string">EOF</span><br></code></pre></td></tr></table></figure>
+
+<p><code>Configure Node.js to be installed via package manager</code> – 通过 yum 的包管理器来安装 Node.js</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo yum install -y curl &amp;&amp; curl -sL https://rpm.nodesource.com/setup_12.x | sudo bash -<br></code></pre></td></tr></table></figure>
+
+<p><code>Install build tools, MongoDB, nodejs and graphicsmagick</code> – 使用构建工具安装 MongoDB、nodejs 和 graphicsmagick</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo yum install -y gcc-c++ make mongodb-org nodejs<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo yum install -y epel-release &amp;&amp; sudo yum install -y GraphicsMagick<br></code></pre></td></tr></table></figure>
+
+<p><code>Using npm install inherits and n, and the node version required by Rocket.Chat</code> – 使用 npm来安装依赖和切换到Rocket.Chat 要求的 node 的版本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo npm install -g inherits n &amp;&amp; sudo n 12.14.0<br></code></pre></td></tr></table></figure>
+
+<p><strong>我之前已经装了 MongoDB 和 Nodejs ，不是用这里的方法安装的。不知道 epel-release 和 GraphicsMagick 是不是 RocketChat 的依赖</strong></p>
+</li>
+<li><p><code>Install Rocket.Chat</code> – 安装 Rocket.Chat<br><code>Download the latest Rocket.Chat version</code> –下载最新的 Rocket.Chat 的版本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">curl -L https://releases.rocket.chat/latest/download -o /tmp/rocket.chat.tgz<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">tar -xzf /tmp/rocket.chat.tgz -C /tmp<br></code></pre></td></tr></table></figure>
+
+<p><code>Install (this guide uses /opt but feel free to choose a different directory)</code> – 安装（可以选择不同的目录）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> /tmp/bundle/programs/server &amp;&amp; npm install<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo mv /tmp/bundle /opt/Rocket.Chat<br></code></pre></td></tr></table></figure>
+</li>
+<li><p><code>Configure the Rocket.Chat service</code> – Rocket.Chat 的配置<br><code>Add the rocketchat user, set the right permissions on the Rocket.Chat folder and create the Rocket.Chat service file</code> – 添加用户并创建正确的权限来创建 Rocket 的服务</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo useradd -M rocketchat &amp;&amp; sudo usermod -L rocketchat<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo chown -R rocketchat:rocketchat /opt/Rocket.Chat<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs bash">cat &lt;&lt; <span class="hljs-string">EOF |sudo tee -a /lib/systemd/system/rocketchat.service</span><br><span class="hljs-string">[Unit]</span><br><span class="hljs-string">Description=The Rocket.Chat server</span><br><span class="hljs-string">After=network.target remote-fs.target nss-lookup.target nginx.service mongod.service</span><br><span class="hljs-string">[Service]</span><br><span class="hljs-string">ExecStart=/usr/local/bin/node /opt/Rocket.Chat/main.js</span><br><span class="hljs-string">StandardOutput=syslog</span><br><span class="hljs-string">StandardError=syslog</span><br><span class="hljs-string">SyslogIdentifier=rocketchat</span><br><span class="hljs-string">User=rocketchat</span><br><span class="hljs-string">Environment=MONGO_URL=mongodb://localhost:27017/rocketchat?replicaSet=rs01 MONGO_OPLOG_URL=mongodb://localhost:27017/local?replicaSet=rs01 ROOT_URL=http://localhost:3000/ PORT=3000</span><br><span class="hljs-string">[Install]</span><br><span class="hljs-string">WantedBy=multi-user.target</span><br><span class="hljs-string">EOF</span><br></code></pre></td></tr></table></figure>
+
+<p>使用 vi 修改刚刚写的 rocketchat.service 将 ROOT_URL 配置成你自己 ip 的 url 。</p>
+</li>
+<li><p><code>Setup storage engine and replication for MongoDB (mandatory for versions &gt; 1), and enable and start MongoDB and Rocket.Chat</code> – 设置 MongoDB 的存储和版本，并且启动 MongoDB 和 Rocket</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo sed -i <span class="hljs-string">&quot;s/^#  engine:/  engine: mmapv1/&quot;</span>  /etc/mongod.conf<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo sed -i <span class="hljs-string">&quot;s/^#replication:/replication:\n  replSetName: rs01/&quot;</span> /etc/mongod.conf<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo systemctl <span class="hljs-built_in">enable</span> mongod &amp;&amp; sudo systemctl start mongod<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">mongo --<span class="hljs-built_in">eval</span> <span class="hljs-string">&quot;printjson(rs.initiate())&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>后台运行和启动 rocket</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo systemctl <span class="hljs-built_in">enable</span> rocketchat &amp;&amp; sudo systemctl start rocketchat<br></code></pre></td></tr></table></figure>
+
+<p>查看当前 rocket 启动否成功</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo systemctl status rocketchat<br></code></pre></td></tr></table></figure>
+
+<p>使用自己的 ip:3000 访问此地址进入 rocket 的配置页面完成配置登录进入聊天界面</p>
+<p>关闭rocket</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo systemctl stop rocketchat<br></code></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h2 id="安装-Hubot"><a href="#安装-Hubot" class="headerlink" title="安装 Hubot"></a>安装 Hubot</h2><p>下载 <a target="_blank" rel="noopener" href="https://github.com/RocketChat/hubot-rocketchat-boilerplate">hubot-rocketchat-boilerplate</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">git <span class="hljs-built_in">clone</span> https://github.com/RocketChat/hubot-rocketchat-boilerplate<br><span class="hljs-built_in">cd</span> hubot-rocketchat-boilerplate<br>npm install<br></code></pre></td></tr></table></figure>
+
+<p>创建一个 <code>.env</code> 文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs plain">export ROCKETCHAT_URL&#x3D;myserver.com<br>export ROCKETCHAT_USER&#x3D;mybotuser<br>export ROCKETCHAT_PASSWORD&#x3D;mypassword<br>export ROCKETCHAT_ROOM&#x3D;general<br>export ROCKETCHAT_USESSL&#x3D;true<br></code></pre></td></tr></table></figure>
+
+<p>需要在 RocketChat 里给机器人创个号，上边的 <code>ROCKETCHAT_USER</code> 和 <code>ROCKETCHAT_PASSWORD</code> 就是机器人用户的账号密码</p>
+<p>运行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">source</span> .env<br>bin/hubot<br></code></pre></td></tr></table></figure>
+
+<p>连接成功后在 RocketChat 里就能@机器人聊天了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">mybotuser what time is it<br></code></pre></td></tr></table></figure>
+
+<div id="paginator"></div></div><div id="post-footer"><hr><a href="/2021/10/20/Hubot-+-Slack-%E6%90%AD%E5%BB%BA/">Hubot + Slack 搭建 Next →</a><hr></div><div id="bottom-btn"><a id="to-index" href="#post-index" title="index">≡</a><a id="to-top" href="#post-title" title="to top">∧</a></div><details id="reward"><summary>打赏</summary><div id="alipay"><span>支付宝 | Alipay</span><br><img src="/img/Alipay.png"></div><div id="wechat"><span>微信 | WeChat</span><br><img src="/img/WeChat.png"></div></details><div id="Valine"></div><script>new Valine({
+ el: '#Valine'
+ , appId: ''
+ , appKey: ''
+ , placeholder: '此条评论委托企鹅物流发送'
+})</script></div></article><aside><div id="about"><a href="/" id="logo"><img src="https://ak.hypergryph.com/assets/index/images/ak/pc/faction/1.png" alt="Logo"></a><h1 id="Dr"><a target="_blank" rel="noopener" href="https://github.com/shanliangLS"> Dr.Shining</a></h1><section id="total"><a id="total-archives" href="/archives"><span class="total-title">Archives Total:</span><span class="total-number">19</span></a><div id="total-tags"><span class="total-title">Tags:</span><span class="total-number">17</span></div><div id="total-categories"><span class="total-title">Categories:</span><span class="total-number">6</span></div></section></div><div id="aside-block"><h1>INDEX</h1><div id="post-index"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-MongoDB"><span class="toc-number">1.</span> <span class="toc-text">安装 MongoDB</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9B%AE%E5%BD%95"><span class="toc-number">1.1.</span> <span class="toc-text">创建数据库目录</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MongoDB-%E5%90%8E%E5%8F%B0%E7%AE%A1%E7%90%86-Shell"><span class="toc-number">1.2.</span> <span class="toc-text">MongoDB 后台管理 Shell</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE-mongod-conf"><span class="toc-number">1.3.</span> <span class="toc-text">配置 mongod.conf</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-RocketChat"><span class="toc-number">2.</span> <span class="toc-text">安装 RocketChat</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-Hubot"><span class="toc-number">3.</span> <span class="toc-text">安装 Hubot</span></a></li></ol></div></div><footer><nobr><span class="text-title">©</span><span class="text-content">github.com/shanliangLS</span></nobr><wbr><wbr><nobr>published with&nbsp;<a target="_blank" rel="noopener" href="http://hexo.io">Hexo&nbsp;</a></nobr><wbr><nobr>Theme&nbsp;<a target="_blank" rel="noopener" href="https://github.com/Yue-plus/hexo-theme-arknights">Arknight&nbsp;</a></nobr></footer></aside></main><canvas id="canvas-dust"></canvas><script src="/js/arknights.js"></script><script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/10.1.2/highlight.min.js"></script></body></html>
