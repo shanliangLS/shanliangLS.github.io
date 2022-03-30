@@ -1,0 +1,35 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>patch package 定制插件 | 钐椋的博客</title><script src="https://cdn.bootcss.com/valine/1.4.4/Valine.min.js"></script><link rel="stylesheet" href="/css/arknights.css"><link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/highlight.js/10.1.2/styles/atom-one-dark-reasonable.min.css"><style>@font-face {
+ font-family: BenderLight;
+ src: local('Bender'), url("/font/BenderLight.ttf");
+}
+@font-face {
+ font-family: 'JetBrains Mono';
+ src: local('JetBrains Mono'), url('/font/JetBrainsMono-Regular.woff2') format('woff2');
+}</style><meta name="generator" content="Hexo 5.2.0"></head><body><header><nav><a href="/">首页</a><a href="/archives/">归档</a></nav></header><main><article><div id="post-bg"><div id="post-title"><div id="post-info"><span>date:<time datetime="2022-03-16T06:06:00.000Z" id="date"> 2022-03-16</time></span><br><span>updated:<time datetime="2022-03-30T03:23:55.334Z" id="updated"> 2022-03-30</time></span></div><h1>patch package 定制插件</h1><hr></div><div id="post-content"><ul>
+<li>参考<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_32429257/article/details/111051217">使用patch-package定制node_modules 中的依赖包</a></li>
+</ul>
+<h2 id="使用背景"><a href="#使用背景" class="headerlink" title="使用背景"></a>使用背景</h2><p>一般 npm 插件都会有预留参数和插槽等，但有时候仍无法避免个性化设置不够用需要修改插件源代码的情况，有两个通常的解决方法</p>
+<ol>
+<li>直接修改 node_modules 里的 package 代码。缺点是 node_modules 不便提交，只能自己改，项目组其他成员也不好同步，重新 npm install 后就没有了</li>
+<li>找到该插件的 github 项目地址，提一个 issue 或 PR。缺点是等待时间太久，有的需求太个性化了也不太好提，甚至有的插件作者已经不维护了</li>
+</ol>
+<p>这时候就需要第三种高大上的方案：patch-package。<br>该方案操作简单、便捷、且一劳永逸，便于同步。原理同第一种方案一样，不过是使用 patch-package 来修改 node_modules 中的依赖包，不需要手动改</p>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><h3 id="安装-patch-package"><a href="#安装-patch-package" class="headerlink" title="安装 patch-package"></a>安装 patch-package</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">npm install patch-package --save-dev<br></code></pre></td></tr></table></figure>
+
+<h3 id="修改-node-modules"><a href="#修改-node-modules" class="headerlink" title="修改 node_modules"></a>修改 node_modules</h3><p>在 node_modules 里找到需要修改的依赖包代码，以 <code>@femessage/log-viewer</code> 组件为例</p>
+<img src="/2022/03/16/patch-package-%E5%AE%9A%E5%88%B6%E6%8F%92%E4%BB%B6/patch_1.png" class="">
+
+<p>这里我修改了一下这个日志组件，加了点功能（可以在我的 <a target="_blank" rel="noopener" href="https://github.com/shanliangLS/log-viewer">fork</a> 中看看我改了什么，改完后可以运行项目测试一下有没有问题）</p>
+<h3 id="生成补丁"><a href="#生成补丁" class="headerlink" title="生成补丁"></a>生成补丁</h3><p>以 <code>@femessage/log-viewer</code> 组件为例</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">npx patch-package @femessage/log-viewer<br></code></pre></td></tr></table></figure>
+
+<p>该命令执行成功后会在项目根目录中自动创建一个 patches 文件夹，该文件夹中就会出现一个 package-name+version.patch 的补丁文件</p>
+<img src="/2022/03/16/patch-package-%E5%AE%9A%E5%88%B6%E6%8F%92%E4%BB%B6/patch_2.png" class="">
+
+<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><p>手动删除项目中的 node_modules 文件，并重新执行 npm install 命令安装 node_modules 依赖包</p>
+<p>安装成功后查看之前修改的 node_modules 依赖包中的文件，查看修改的代码是否依然存在，如果之前修改代码依然存在即表明补丁文件已经生效，可以将该补丁提交了</p><div id="paginator"></div></div><div id="post-footer"><hr><a href="/2022/03/17/Github-%E7%AC%94%E8%AE%B0/">← Prev Github 笔记</a><span style="color: #fe2"> | </span><a href="/2022/03/16/npm-install/">npm install Next →</a><hr></div><div id="bottom-btn"><a id="to-index" href="#post-index" title="index">≡</a><a id="to-top" href="#post-title" title="to top">∧</a></div><details id="reward"><summary>打赏</summary><div id="alipay"><span>支付宝 | Alipay</span><br><img src="/img/Alipay.png"></div><div id="wechat"><span>微信 | WeChat</span><br><img src="/img/WeChat.png"></div></details><div id="Valine"></div><script>new Valine({
+ el: '#Valine'
+ , appId: ''
+ , appKey: ''
+ , placeholder: '此条评论委托企鹅物流发送'
+})</script></div></article><aside><div id="about"><a href="/" id="logo"><img src="https://ak.hypergryph.com/assets/index/images/ak/pc/faction/1.png" alt="Logo"></a><h1 id="Dr"><a target="_blank" rel="noopener" href="https://github.com/shanliangLS"> Dr.Shining</a></h1><section id="total"><a id="total-archives" href="/archives"><span class="total-title">Archives Total:</span><span class="total-number">25</span></a><div id="total-tags"><span class="total-title">Tags:</span><span class="total-number">18</span></div><div id="total-categories"><span class="total-title">Categories:</span><span class="total-number">8</span></div></section></div><div id="aside-block"><h1>INDEX</h1><div id="post-index"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E8%83%8C%E6%99%AF"><span class="toc-number">1.</span> <span class="toc-text">使用背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8"><span class="toc-number">2.</span> <span class="toc-text">使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-patch-package"><span class="toc-number">2.1.</span> <span class="toc-text">安装 patch-package</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9-node-modules"><span class="toc-number">2.2.</span> <span class="toc-text">修改 node_modules</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%9F%E6%88%90%E8%A1%A5%E4%B8%81"><span class="toc-number">2.3.</span> <span class="toc-text">生成补丁</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95"><span class="toc-number">2.4.</span> <span class="toc-text">测试</span></a></li></ol></li></ol></div></div><footer><nobr><span class="text-title">©</span><span class="text-content">github.com/shanliangLS</span></nobr><wbr><wbr><nobr>published with&nbsp;<a target="_blank" rel="noopener" href="http://hexo.io">Hexo&nbsp;</a></nobr><wbr><nobr>Theme&nbsp;<a target="_blank" rel="noopener" href="https://github.com/Yue-plus/hexo-theme-arknights">Arknight&nbsp;</a></nobr></footer></aside></main><canvas id="canvas-dust"></canvas><script src="/js/arknights.js"></script><script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/10.1.2/highlight.min.js"></script></body></html>
