@@ -5,7 +5,7 @@
 @font-face {
  font-family: 'JetBrains Mono';
  src: local('JetBrains Mono'), url('/font/JetBrainsMono-Regular.woff2') format('woff2');
-}</style><meta name="generator" content="Hexo 5.2.0"></head><body><header><nav><a href="/">首页</a><a href="/archives/">归档</a></nav></header><main><article><div id="post-bg"><div id="post-title"><div id="post-info"><span>date:<time datetime="2022-10-12T01:55:57.588Z" id="date"> 2022-10-12</time></span><br><span>updated:<time datetime="2022-10-12T01:55:57.588Z" id="updated"> 2022-10-12</time></span></div><h1>CentOS7 部署 ZlMediaKit</h1><hr></div><div id="post-content"><p><a target="_blank" rel="noopener" href="https://github.com/ZLMediaKit/ZLMediaKit/wiki/%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B">官网</a></p>
+}</style><meta name="generator" content="Hexo 5.2.0"></head><body><header><nav><a href="/">首页</a><a href="/archives/">归档</a></nav></header><main><article><div id="post-bg"><div id="post-title"><div id="post-info"><span>date:<time datetime="2022-10-12T02:11:24.645Z" id="date"> 2022-10-12</time></span><br><span>updated:<time datetime="2022-10-12T02:11:24.645Z" id="updated"> 2022-10-12</time></span></div><h1>CentOS7 部署 ZlMediaKit</h1><hr></div><div id="post-content"><p><a target="_blank" rel="noopener" href="https://github.com/ZLMediaKit/ZLMediaKit/wiki/%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B">官网</a></p>
 <h2 id="获取代码"><a href="#获取代码" class="headerlink" title="获取代码"></a>获取代码</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">#国内用户推荐从同步镜像网站gitee下载 </span><br>git <span class="hljs-built_in">clone</span> --depth 1 https://gitee.com/xia-chu/ZLMediaKit<br><span class="hljs-built_in">cd</span> ZLMediaKit<br><span class="hljs-comment">#千万不要忘记执行这句命令</span><br>git submodule update --init<br></code></pre></td></tr></table></figure>
 
 <h2 id="编译器"><a href="#编译器" class="headerlink" title="编译器"></a>编译器</h2><p>要求 gcc 版本 &gt;= 4.8(4.7应该也能支持)</p>
@@ -17,7 +17,8 @@
 <p>我安装完后还是 2.8.12.2 版本，不够：<code>CMake 3.0.0 or higher is required. You are running version 2.8.12.2</code></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@liangshan build]<span class="hljs-comment"># cmake -version</span><br>cmake version 2.8.12.2<br></code></pre></td></tr></table></figure>
 
-<p><a href="../CentOS7-%E5%8D%87%E7%BA%A7-cmake/">升级 cmake</a></p>
+<a href="/2022/06/02/CentOS7-%E5%8D%87%E7%BA%A7-cmake/" title="升级 cmake">升级 cmake</a>
+
 <h2 id="依赖库"><a href="#依赖库" class="headerlink" title="依赖库"></a>依赖库</h2><p>ZLMediaKit 可选依赖一些第三方库，这些库都不是必选的</p>
 <ul>
 <li>openssl<br>flash player 在播放 rtmp 时，采用的是复杂握手模式，如果不安装该库，flash player 将播放不了 zlmediakit 提供的 rtmp url<br>同时 ZLMediaKit 的 https/rtsps 相关功能需要使用 openssl 才能开启</li>
